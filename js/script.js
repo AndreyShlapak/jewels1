@@ -11,6 +11,7 @@ $(function () {
     let posX
     let movingItems = 0
     let total = 0
+    let seconds = 0
 
     const gameStates = {
         "pick": 'pick',
@@ -40,14 +41,16 @@ $(function () {
         'url("img/violet.svg")'
     )
     $('body').css({
-        'background-color': 'black',
+        'background-color': '#1c1b1f',
         'margin': '0',
-    }).append('<div id="gamefield"></div> <div id="marker"></div> <button id="button">play</button> <div id="total">total: 0</div> <div id="timer">time: 30s</div>')
+    }).append('<div id="gamefield"></div> </div> <button id="button">play</button> <div id="total">total: 0</div> <div id="timer">time: ' + seconds + 's</div>')
     $('#gamefield').css({
         'width': gemSize * numCols + 'px',
         'height': gemSize * numRows + 'px',
         'position': 'relative',
-    })
+        'top': '100px',
+        'margin': 'auto'
+    }).append('<div id="marker">')
     $('#marker').css({
         'width': (gemSize - 10) + 'px',
         'height': (gemSize - 10) + 'px',
@@ -65,8 +68,8 @@ $(function () {
         'border': 'none',
         'padding': '0 10px',
         'position': 'absolute',
-        'top': '400px',
-        'left': '4px'
+        'top': '500px',
+        'left': '560px'
     })
     $('#total').css({
         'display': 'inline-block',
@@ -76,8 +79,8 @@ $(function () {
         'letter-spacing': '3px',
         'font-size': '32px',
         'position': 'absolute',
-        'top': '400px',
-        'left': '154px'
+        'top': '500px',
+        'left': '700px'
     })
     $('#timer').css({
         'display': 'inline-block',
@@ -87,8 +90,8 @@ $(function () {
         'letter-spacing': '3px',
         'font-size': '32px',
         'position': 'absolute',
-        'top': '400px',
-        'left': '304px'
+        'top': '500px',
+        'left': '860px'
     })
     for (i = 0; i < numRows; i++) {
         jewels[i] = new Array()
@@ -123,6 +126,7 @@ $(function () {
             if ($(this).text() == 'restart') {
                 selectedRow = -1
                 total = 0
+                seconds = 0
                 for (i = 0; i < numRows; i++) {
                     for (j = 0; j < numCols; j++) {
                         $('#' + gemIdPrefix + '_' + i + '_' + j).remove()
@@ -150,6 +154,7 @@ $(function () {
                     }
                 }
                 $('#total').text('total: 0')
+                $('#time').text('time: ' + seconds + 's')
             }
 
             gameState = gameStates.pick
@@ -166,6 +171,11 @@ $(function () {
                         $(this).hide()
                     }
             })
+
+            let timerId = setInterval(() => {
+                $('#timer').text('time: ' + ++seconds + 's')
+            }, 1000);
+
             setTimeout(function () {
                 gameState = null
                 $('.' + gemClass).css({
@@ -179,8 +189,8 @@ $(function () {
                 }, {
                     duration: 500
                 }).text('restart')
-
-            }, 30000)
+                clearInterval(timerId)
+            }, 90000)
         }
     })
 
@@ -408,7 +418,7 @@ $(function () {
             $(this).animate({
                 top: '+=' + gemSize
             }, {
-                    duration: 500,
+                    duration: 300,
                     complete: function () {
                         $(this).removeClass('fall')
                         checkMoving()
